@@ -5,8 +5,8 @@ import (
 )
 
 func main() {
-	//url := "https://www.imdb.com/chart/top/?ref_=nv_mv_250"
-	//database.AddData(url)
+	url := "https://www.imdb.com/chart/top/?ref_=nv_mv_250"
+	database.AddData(url)
 
 	//db, err := gorm.Open(sqlite.Open("test"), &gorm.Config{})
 	//if err != nil {
@@ -17,6 +17,5 @@ func main() {
 	//db.First(&f,"id=250")
 	//fmt.Println(f)
 
-	url2 := "https://template-homedecor.onshopbase.com/collections/new-arrivals?sortby=price%3Aasc"
-	crawler.GetProducts(url2)
+	
 }
