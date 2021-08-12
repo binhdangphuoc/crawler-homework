@@ -20,24 +20,6 @@ import (
 	h "project1/myHttp"
 )
 
-/*
-//Find number of page
-func totalPage(url string) int {
-	response, err := h.HttpClient.GetRequestWithRetries(url)
-	h.CheckError(err)
-	defer response.Body.Close()
-	doc, err := goquery.NewDocumentFromReader(response.Body)
-	h.CheckError(err)
-
-	lastPageLink, _ := doc.Find("ul.pagination li:last-child a").Attr("href") // Đọc dữ liệu từ thẻ a của ul.pagination
-	fmt.Println("STRINGFOUND: ",lastPageLink)
-	split := strings.Split(lastPageLink, "/")[5]
-	totalPages, _ := strconv.Atoi(split)
-	fmt.Println("totalPage->", totalPages)
-	return totalPages
-}
-*/
-
 func GetInfoPage(pathURL string) (map[string]model.Film, error) {
 	response, err := h.HttpClient.GetRequestWithRetries(pathURL)
 	h.CheckError(err)
@@ -86,50 +68,3 @@ func GetInfoPage(pathURL string) (map[string]model.Film, error) {
 	})
 	return infoList, nil
 }
-
-/*
-func AllPage(url string) {
-	fileName := "info_web_deface.csv"
-	file, err := os.Create(fileName)
-	if err != nil {
-		log.Fatalf("Could not create %s", fileName)
-	}
-	defer file.Close()
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-	_=writer.Write([]string{"Attacker", "Country", "Web Url", "Ip", "Date"})
-
-	sem := semaphore.NewWeighted(int64(runtime.NumCPU())) // Tạo ra số lượng group goroutines bằng 8 lần số luồng CPU, cùng đồng thời đi thu thập thông tin
-	group, ctx := errgroup.WithContext(context.Background())
-	var totalResults int = 0
-
-	for page := 1; page <= 1; page ++ { // Lặp qua từng trang đã được phân trang
-		pathURL := fmt.Sprintf("https://mirror-h.org/search/country/VN/pages/%d", page) // Tìm ra url của từng trang bằng cách nối chuỗi với số trang
-		err := sem.Acquire(ctx, 1)
-		if err != nil {
-			fmt.Printf("Acquire err = %+v\n", err)
-			continue
-		}
-		group.Go(func() error {
-			defer sem.Release(1)
-
-			// do work
-			infoList, err := GetInfoPage(pathURL) // Thu thập thông tin web qua url của page
-			if err != nil {
-				log.Println(err)
-			}
-			totalResults += len(infoList)
-			for _, info := range infoList {
-				_ = writer.Write([]string{info.Attacker, info.Country, info.WebUrl, info.Ip, info.Date})
-			}
-			return nil
-		})
-	}
-	if err := group.Wait(); err != nil { // Error Group chờ đợi các group goroutines done, nếu có lỗi thì trả về
-		fmt.Printf("g.Wait() err = %+v\n", err)
-	}
-	fmt.Println("crawler done!")
-	fmt.Println("total results:", totalResults)
-}
-
-*/
